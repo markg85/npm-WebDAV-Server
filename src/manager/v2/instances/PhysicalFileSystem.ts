@@ -25,7 +25,9 @@ import { Readable, Writable } from 'stream'
 import { join as pathJoin } from 'path'
 import { Errors } from '../../../Errors'
 import { Path } from '../Path'
-import * as fs from 'fs'
+import * as buildinFs from 'fs'
+
+let fs: any
 
 export class PhysicalFileSystemResource
 {
@@ -87,9 +89,17 @@ export class PhysicalFileSystem extends FileSystem
         [path : string] : PhysicalFileSystemResource
     }
 
-    constructor(public rootPath : string)
+    constructor(public rootPath : string, public fsArg : any = null)
     {
         super(new PhysicalSerializer());
+
+        // This gives the liberty to define an own fs object.
+        // When nothing is provided the default (from the node fs library) is used.
+        if(!fsArg) {
+            fs = buildinFs;
+        } else {
+            fs = this.fsArg
+        }
 
         this.resources = {
             '/': new PhysicalFileSystemResource()
