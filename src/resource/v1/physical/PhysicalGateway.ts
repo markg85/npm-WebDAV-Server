@@ -15,10 +15,13 @@ export class PhysicalGateway extends PhysicalFolder
     cache : {
         [path : string] : PhysicalResource
     }
+    customName : string;
 
-    constructor(rootPath : string, protected customName ?: string, parent ?: IResource, fsManager ?: FSManager)
+    constructor(rootPath : string, customName ?: string, parent ?: IResource, fsManager ?: FSManager)
     {
         super(rootPath, parent, fsManager ? fsManager : new PhysicalGFSManager());
+
+        this.customName = customName;
 
         this.cache = {
             '/': this
